@@ -1,0 +1,43 @@
+@Library("Shared") _
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello'){
+            steps{
+                script{
+                    hello()
+                }
+            }
+        }
+        stage('Code') {
+            steps {
+                script{
+                    clone('https://github.com/Mallesham21/django-notes-app.git','main')
+                }
+            }
+           
+        }
+        stage('Build') {
+            steps {
+                script{
+                    build("notes-app","latest","mallesham21")
+                }
+            }
+        }
+        stage('Push to DockerHub') {
+            steps {
+                script{
+                    push("notes-app","latest","mallesham21")
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script{
+                    compose()
+                }
+            }
+        }
+    }
+}
